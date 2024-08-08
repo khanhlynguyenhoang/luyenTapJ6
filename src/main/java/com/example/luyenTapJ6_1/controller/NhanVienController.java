@@ -30,11 +30,6 @@ public class NhanVienController {
     @Autowired
     private NhanVienService nhanVienService;
 
-    @GetMapping("hien-thi")
-    public ResponseEntity<List> getAll() {
-        List<NhanVienResponse> listNhanVien = nhanVienService.getAll();
-        return ResponseEntity.ok(listNhanVien);
-    }
 
     @GetMapping("phan-trang")
     public ResponseEntity<?> phanTrang(@RequestParam(defaultValue = "0") Integer page) {

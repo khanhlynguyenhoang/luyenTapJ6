@@ -2,6 +2,8 @@ package com.example.luyenTapJ6_1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -30,20 +32,19 @@ public class SecurityConfig {
         UserDetails nhanVien = User.builder()
                 .username("HangNT169")
                 .password(encoder.encode("123@123"))
-                .roles("NHANVIEN")
+                .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(nhanVien);
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/hien-thi").hasRole("NHANVIEN") // Cần vai trò NHANVIEN
-                        .anyRequest().permitAll() // Tất cả các yêu cầu khác đều được phép
-                )
-                .csrf().disable(); // Bắt buộc cần nếu không sẽ lỗi khi dùng update
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        httpSecurity.authorizeHttpRequests(
+                httpSecuritys-> httpSecuritys.requestMatchers(HttpMethod.GET,"/security/hien-thi").hasRole("ADMIN")
+                        .anyRequest().permitAll()
+        );
+        httpSecurity.httpBasic(Customizer.withDefaults());
+        httpSecurity.csrf(csrf -> csrf.disable());
         return httpSecurity.build();
     }
 
